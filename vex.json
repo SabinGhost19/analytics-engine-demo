@@ -1,0 +1,17 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://openvex.devsecops.licenta.ro/analytics-engine-demo",
+  "author": "platform-security@licenta.ro",
+  "timestamp": "2026-05-25T12:00:00Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": { "name": "CVE-2023-50782" },
+      "products": [
+        { "@id": "pkg:pypi/cryptography@41.0.0" }
+      ],
+      "status": "under_investigation",
+      "justification": "Triage pending — analytics-worker is a demo of Failed_SupplyChain; this VEX statement is informational, not exempting."
+    }
+  ]
+}

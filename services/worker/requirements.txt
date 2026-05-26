@@ -1,0 +1,7 @@
+# Pinned to deliberately vulnerable versions so Trivy reports fix-able
+# CVEs and the strict SCA branch ends up in Failed_SupplyChain. Do NOT
+# bump — that's the point of this image. Demo only; never deploy
+# anywhere real.
+cryptography==41.0.0
+requests==2.31.0
+pyyaml==6.0

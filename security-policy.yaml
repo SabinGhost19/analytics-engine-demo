@@ -1,0 +1,19 @@
+securityBoundaries:
+  network:
+    allowGlobalInternet: true
+    allowedEgressNamespaces:
+      - kafka
+      - observability
+    restrictedPorts:
+      - 22
+provenance:
+  requireVoucher: true
+  minSlsaLevel: 3
+  trustedRepositories:
+    - SabinGhost19/analytics-engine-demo
+runtime:
+  onCompromise: Alert
+  allowedPaths:
+    - /tmp
+    - /var/run
+    - /app/cache
