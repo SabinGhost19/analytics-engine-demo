@@ -23,6 +23,10 @@ class Event(BaseModel):
     kind: str
     value: float
 
+class Event2(BaseModel):
+    kind: str
+    value: float
+
 
 class IngestRequest(BaseModel):
     events: list[Event]
