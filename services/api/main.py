@@ -10,9 +10,10 @@ system libs (libc, openssl), and the SCA allows them with
 from __future__ import annotations
 
 import os
+import statistics
 from datetime import datetime, timezone
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 app = FastAPI(title="analytics-api", version="0.1.0")
@@ -33,6 +34,18 @@ class AggregateResponse(BaseModel):
     received_at: str
 
 
+class StatsRequest(BaseModel):
+    values: list[float]
+
+
+class StatsResponse(BaseModel):
+    count: int
+    min: float
+    max: float
+    mean: float
+    stddev: float
+
+
 @app.get("/health")
 @app.get("/healthz")
 def health() -> dict[str, str]:
@@ -46,6 +59,21 @@ def aggregate(payload: IngestRequest) -> AggregateResponse:
         count=len(payload.events),
         sum=total,
         received_at=datetime.now(timezone.utc).isoformat(),
+    )
+
+
+@app.post("/stats", response_model=StatsResponse)
+def stats(payload: StatsRequest) -> StatsResponse:
+    """Descriptive statistics over a list of values (min/max/mean/stddev)."""
+    values = payload.values
+    if not values:
+        raise HTTPException(status_code=400, detail="values must be non-empty")
+    return StatsResponse(
+        count=len(values),
+        min=min(values),
+        max=max(values),
+        mean=statistics.fmean(values),
+        stddev=statistics.pstdev(values) if len(values) > 1 else 0.0,
     )
 
 

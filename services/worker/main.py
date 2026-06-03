@@ -26,10 +26,25 @@ def _handle_signal(signum: int, _frame: object) -> None:
     _STOPPING = True
 
 
+def parse_tick_interval(raw: str | None, default: float = 2.0) -> float:
+    """Parse the TICK_INTERVAL env value into a positive float of seconds.
+
+    Pure helper (no I/O) so it is unit-testable. Falls back to ``default``
+    for missing, empty, non-numeric or non-positive values.
+    """
+    if raw is None or raw.strip() == "":
+        return default
+    try:
+        value = float(raw)
+    except ValueError:
+        return default
+    return value if value > 0 else default
+
+
 def main() -> int:
     signal.signal(signal.SIGINT, _handle_signal)
     signal.signal(signal.SIGTERM, _handle_signal)
-    interval = float(os.environ.get("TICK_INTERVAL", "2"))
+    interval = parse_tick_interval(os.environ.get("TICK_INTERVAL"))
     logger.info("analytics-worker starting (tick=%ss)", interval)
     while not _STOPPING:
         logger.info("drained analytics batch")
